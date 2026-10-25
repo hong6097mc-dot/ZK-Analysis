@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZK Analysis</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080d18;color:#edf3ff;font-family:Arial,sans-serif}
+header{padding:22px 18px;background:#101a2b;border-bottom:1px solid #26344b}
+.logo{font-size:24px;font-weight:bold;color:#58a6ff}
+small{color:#9cacc4}
+main{padding:18px;max-width:850px;margin:auto}
+.card{background:#111b2d;border:1px solid #293750;border-radius:14px;padding:18px;margin-bottom:16px}
+h2{font-size:18px;margin-top:0}
+.price{font-size:28px;font-weight:bold;margin:12px 0;color:#65e6bd}
+.row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+button,select{background:#1c2a40;color:white;border:1px solid #3b506f;padding:12px;border-radius:8px}
+button{cursor:pointer}
+button.active{background:#2469c7}
+.chart{height:190px;display:flex;align-items:flex-end;gap:5px;padding:15px 0}
+.bar{flex:1;min-width:3px;border-radius:3px 3px 0 0}
+.green{background:#20c997}
+.red{background:#ff647c}
+.stat{font-size:14px;color:#aabbd2}
+footer{text-align:center;padding:25px;color:#8291a8;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">ZK Analysis</div>
+  <small>MARKET LEARNING DASHBOARD</small>
+</header>
+<main>
+  <div class="card">
+    <div class="row">
+      <div>
+        <h2>Market Overview</h2>
+        <small>Demo data only</small>
+      </div>
+      <select id="asset" onchange="changeAsset()">
+        <option value="XAUUSD">Gold / USD</option>
+        <option value="BTCUSD">Bitcoin / USD</option>
+      </select>
+    </div>
+    <div class="price" id="price">$2,350.00</div>
+    <div class="stat">DEMO PRICE — NOT LIVE MARKET DATA</div>
+  </div>
+  <div class="card">
+    <h2>Demo Candlestick Chart</h2>
+    <div class="row" id="timeframes">
+      <button class="active" onclick="setTF(this,'1H')">1H</button>
+      <button onclick="setTF(this,'15M')">15M</button>
+      <button onclick="setTF(this,'5M')">5M</button>
+    </div>
+    <div class="chart" id="chart"></div>
+    <small id="tfLabel">Timeframe: 1H · Simulated candles</small>
+  </div>
+  <div class="card">
+    <h2>Technical Learning</h2>
+    <div class="row">
+      <span>Market trend</span><strong id="trend">Bullish (Demo)</strong>
+    </div>
+    <hr style="border-color:#293750;margin:16px 0">
+    <div class="row">
+      <span>RSI (Demo)</span><strong id="rsi">56.4</strong>
+    </div>
+    <p class="stat">These sample values are for learning only and are not trading signals.</p>
+  </div>
+  <div class="card">
+    <h2>Learning Notice</h2>
+    <p class="stat">ZK Analysis currently uses simulated data. It does not provide live prices or execute trades.</p>
+  </div>
+</main>
+<footer>ZK Analysis · Educational Demo · No live trading</footer>
+<script>
+let seed=17;
+function random(){seed=(seed*9301+49297)%233280;return seed/233280}
+function drawChart(){
+ const chart=document.getElementById('chart');
+ chart.innerHTML='';
+ for(let i=0;i<28;i++){
+   let up=random()>.45;
+   let h=25+random()*145;
+   let bar=document.createElement('div');
+   bar.className='bar '+(up?'green':'red');
+   bar.style.height=h+'px';
+   chart.appendChild(bar);
+ }
+}
+function changeAsset(){
+ const asset=document.getElementById('asset').value;
+ document.getElementById('price').textContent=
+ asset==='XAUUSD'?'$2,350.00':'$62,500.00';
+ document.getElementById('trend').textContent=
+ asset==='XAUUSD'?'Bullish (Demo)':'Bearish (Demo)';
+ document.getElementById('rsi').textContent=
+ asset==='XAUUSD'?'56.4':'43.8';
+ seed+=13;drawChart();
+}
+function setTF(btn,tf){
+ document.querySelectorAll('#timeframes button').forEach(b=>b.classList.remove('active'));
+ btn.classList.add('active');
+ document.getElementById('tfLabel').textContent='Timeframe: '+tf+' · Simulated candles';
+ seed+=tf.length*7;drawChart();
+}
+drawChart();
+</script>
+</body>
+</html>
